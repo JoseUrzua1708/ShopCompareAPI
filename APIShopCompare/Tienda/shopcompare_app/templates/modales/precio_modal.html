@@ -1,0 +1,42 @@
+<div class="modal" id="precioModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('precioModal')">&times;</span>
+        <h3>Registrar Precio</h3>
+
+        <form method="POST" action="/">
+            <input type="hidden" name="tipo" value="precio">
+
+            <div class="form-group">
+                <label>Producto</label>
+                <select name="producto_id" required>
+                    <option value="">Seleccionar producto</option>
+                    {% for p in productos %}
+                        <option value="{{ p.id }}">{{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Sucursal</label>
+                <select name="sucursal_id" required>
+                    <option value="">Seleccionar sucursal</option>
+                    {% for s in sucursales %}
+                        <option value="{{ s.id }}">{{ s.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Precio</label>
+                <input type="number" step="0.01" name="precio" min="0.01" placeholder="Ejemplo: 1999.99" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha</label>
+                <input type="date" name="fecha" required>
+            </div>
+
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+</div>

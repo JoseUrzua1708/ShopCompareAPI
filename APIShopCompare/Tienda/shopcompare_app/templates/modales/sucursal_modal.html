@@ -1,0 +1,47 @@
+<div class="modal" id="sucursalModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('sucursalModal')">&times;</span>
+<h3>Registrar Sucursal</h3>
+
+<form method="POST" action="/">
+<input type="hidden" name="tipo" value="sucursal">
+
+<div class="form-group">
+<label>Nombre de la sucursal</label>
+<input type="text" name="nombre" placeholder="Ejemplo: Sucursal Centro, Sucursal Norte" required>
+</div>
+
+<div class="form-group">
+<label>Dirección</label>
+<input type="text" name="direccion" placeholder="Ejemplo: Av. Juárez #245, Col. Centro" required>
+</div>
+
+<div class="form-group">
+<label>Ciudad</label>
+<input type="text" name="ciudad" placeholder="Ejemplo: Santa Cruz" required>
+</div>
+
+<div class="form-group">
+<label>Zona</label>
+<input type="text" name="zona" placeholder="Ejemplo: Centro, Norte, Sur" required>
+</div>
+
+<div class="form-group">
+<label>Tienda</label>
+<select name="tienda_id" required>
+    <option value="">Seleccionar tienda</option>
+    {% for t in tiendas %}
+        <option value="{{ t.id }}">{{ t.nombre }}</option>
+    {% endfor %}
+</select><option value="">Seleccionar tienda</option>
+{% for t in tiendas %}
+<option value="{{t[0]}}">{{t[1]}}</option>
+{% endfor %}
+</select>
+</div>
+
+<button type="submit">Guardar</button>
+</form>
+
+</div>
+</div>

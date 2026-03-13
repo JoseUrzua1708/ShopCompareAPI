@@ -1,0 +1,33 @@
+<div class="modal" id="compararModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('compararModal')">&times;</span>
+
+<h3>Comparar precios</h3>
+
+<div class="form-group">
+<label>Producto</label>
+<select id="filtroProducto">
+<option value="">Todos</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Ciudad</label>
+<select id="filtroCiudad">
+<option value="">Todas</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Zona</label>
+<select id="filtroZona">
+<option value="">Todas</option>
+</select>
+</div>
+
+<button onclick="buscarPrecios()">Buscar</button>
+
+<div id="resultadoComparacion" style="margin-top:20px; color:#333;"></div>
+
+</div>
+</div>

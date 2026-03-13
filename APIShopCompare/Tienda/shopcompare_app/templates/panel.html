@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/panel.css') }}">
+<title>ShopCompare</title>
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="logo">
+        <div class="logo-badge">SC</div>
+        ShopCompare
+    </div>
+</header>
+
+<div class="content-wrapper">
+
+    <h2>Panel General</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{category}}">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="dashboard">
+
+        <div class="dash-card" onclick="openModal('tiendaModal')">
+            <div class="icon">&#127970;</div>
+            <h3>Tiendas</h3>
+            <p>Registrar y administrar tiendas</p>
+        </div>
+
+        <div class="dash-card" onclick="openModal('sucursalModal')">
+            <div class="icon">&#128205;</div>
+            <h3>Sucursales</h3>
+            <p>Gestionar ubicaciones f&iacute;sicas</p>
+        </div>
+
+        <div class="dash-card" onclick="openModal('productoModal')">
+            <div class="icon">&#128230;</div>
+            <h3>Productos</h3>
+            <p>Agregar nuevos productos</p>
+        </div>
+
+        <div class="dash-card" onclick="openModal('precioModal')">
+            <div class="icon">&#128178;</div>
+            <h3>Precios</h3>
+            <p>Registrar precios por sucursal</p>
+        </div>
+
+        <div class="dash-card" onclick="openModal('compararModal')">
+            <div class="icon">&#128202;</div>
+            <h3>Comparar Precios</h3>
+            <p>Ver comparaci&oacute;n entre tiendas</p>
+        </div>
+
+        <div class="dash-card" onclick="openModal('syncApiModal')">
+            <div class="icon">&#127760;</div>
+            <h3>Consumir APIs</h3>
+            <p>Importar y sincronizar datos externos</p>
+        </div>
+
+    </div>
+
+    <section class="export-panel">
+        <h3>Prueba de Exportacion API</h3>
+        <p>Prueba salida en JSON o XML de los endpoints REST v1.</p>
+
+        <div class="export-controls">
+            <select id="exportEndpoint">
+                <option value="/api/v1/completo">/api/v1/completo</option>
+                <option value="/api/v1/catalogo">/api/v1/catalogo</option>
+                <option value="/api/v1/tiendas">/api/v1/tiendas</option>
+                <option value="/api/v1/sucursales">/api/v1/sucursales</option>
+                <option value="/api/v1/productos">/api/v1/productos</option>
+                <option value="/api/v1/precios">/api/v1/precios</option>
+            </select>
+
+            <select id="exportFormat">
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+            </select>
+
+            <button type="button" class="export-btn" onclick="probarExportacion()">Probar exportacion</button>
+        </div>
+
+        <div class="export-meta" id="exportMeta">Sin pruebas ejecutadas.</div>
+        <pre class="export-output" id="exportOutput"></pre>
+    </section>
+</div>
+
+{% include "modales/tienda_modal.html" %}
+{% include "modales/sucursal_modal.html" %}
+{% include "modales/producto_modal.html" %}
+{% include "modales/precio_modal.html" %}
+{% include "modales/comparar_precios.html" %}
+{% include "modales/sync_api_modal.html" %}
+
+<script src="{{ url_for('static', filename='js/panel.js') }}"></script>
+
+</body>
+</html>

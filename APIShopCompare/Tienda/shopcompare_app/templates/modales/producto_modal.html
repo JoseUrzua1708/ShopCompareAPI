@@ -1,0 +1,23 @@
+<div class="modal" id="productoModal">
+<div class="modal-content">
+<span class="close" onclick="closeModal('productoModal')">&times;</span>
+<h3>Registrar Producto</h3>
+
+<form method="POST" action="/">
+<input type="hidden" name="tipo" value="producto">
+
+<div class="form-group">
+<label>Nombre del producto</label>
+<input type="text" name="nombre" placeholder="Ejemplo: Laptop HP, Teclado mecánico, Mouse inalámbrico" required>
+</div>
+
+<div class="form-group">
+<label>Descripción</label>
+<input type="text" name="descripcion" placeholder="Ejemplo: Laptop HP con 16GB de RAM y 512GB SSD" required>
+</div>
+
+<button type="submit">Guardar</button>
+</form>
+
+</div>
+</div>

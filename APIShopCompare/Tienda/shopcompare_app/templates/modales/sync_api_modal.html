@@ -1,0 +1,17 @@
+<div class="modal" id="syncApiModal">
+<div class="modal-content modal-wide">
+<span class="close" onclick="closeModal('syncApiModal')">&times;</span>
+
+<h3>Consumo de APIs externas</h3>
+<p class="modal-note">1) Consulta datos de Amazon/Walmart. 2) Inserta o actualiza en tu base de datos.</p>
+
+<div class="sync-actions">
+<button type="button" onclick="consumirApisExternas()">Consumir APIs</button>
+<button type="button" class="secondary-btn" onclick="sincronizarPreciosExternos()">Insertar / Actualizar BD</button>
+</div>
+
+<div id="apiResumen" class="api-resumen"></div>
+<div id="apiPreview" class="api-preview"></div>
+
+</div>
+</div>
