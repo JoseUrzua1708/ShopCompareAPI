@@ -5,6 +5,7 @@ from datetime import datetime, date
 import requests
 import xml.etree.ElementTree as ET
 import os
+import random
 import certifi
 import ssl
 
@@ -123,65 +124,86 @@ def obtener_productos_fakestore():
     url = "https://fakestoreapi.com/products"
     try:
         response = requests.get(url, timeout=15)
+
         if response.status_code == 200:
             return response.json()
+
     except Exception as e:
         print("Error FakeStore:", e)
+
     return []
 
 
+# ================================
+# OBTENER PRODUCTOS DE DUMMYJSON
+# ================================
 def obtener_productos_dummy():
     url = "https://dummyjson.com/products"
     try:
         response = requests.get(url, timeout=15)
+
         if response.status_code == 200:
             return response.json().get("products", [])
+
     except Exception as e:
         print("Error DummyJSON:", e)
+
     return []
 
 
+# ================================
+# COMBINAR PRODUCTOS
+# ================================
 def combinar_productos():
-    productos_unicos = {}
+
+    productos_final = []
 
     fakestore = obtener_productos_fakestore()
     dummy = obtener_productos_dummy()
 
-    # Procesar FakeStore
+    # FakeStore
     for p in fakestore:
-        clave = p["title"].lower()
-        productos_unicos[clave] = {
-            "titulo": p["title"],
-            "precio": p["price"],
+
+        productos_final.append({
+            "titulo": p.get("title"),
+            "descripcion": p.get("description"),
+            "precio": p.get("price"),
             "categoria": p.get("category"),
             "fuente": "FakeStore"
-        }
+        })
 
-    # Procesar DummyJSON
+    # DummyJSON
     for p in dummy:
-        clave = p["title"].lower()
 
-        if clave in productos_unicos:
-            # ACTUALIZA datos si ya existe
-            productos_unicos[clave]["precio"] = p["price"]
-            productos_unicos[clave]["categoria"] = p.get("category")
-            productos_unicos[clave]["fuente"] += ", DummyJSON"
-        else:
-            # INSERTA si no existe
-            productos_unicos[clave] = {
-                "titulo": p["title"],
-                "precio": p["price"],
-                "categoria": p.get("category"),
-                "fuente": "DummyJSON"
-            }
+        productos_final.append({
+            "titulo": p.get("title"),
+            "descripcion": p.get("description"),
+            "precio": p.get("price"),
+            "categoria": p.get("category"),
+            "fuente": "DummyJSON"
+        })
 
-    return list(productos_unicos.values())
+    return productos_final
 
 
-productos = combinar_productos()
+# ================================
+# API
+# ================================
+@app.route("/api/ver_productos")
+def api_ver_productos():
 
-for p in productos[:10]:
-    print(p)
+    productos = combinar_productos()
+
+    if len(productos) == 0:
+        return jsonify({
+            "mensaje": "No llegaron productos de APIs externas"
+        })
+
+    return jsonify({
+        "total": len(productos),
+        "productos": productos
+    })
+
 # ====================================
 # PANEL GENERAL
 # ====================================
@@ -620,6 +642,65 @@ def sync_precios_api():
     except Exception as e:
         print("Error sincronizando:", e)
         return respuesta_api({"error": "Error al sincronizar"}, root_tag="error"), 500
+    
+@app.route("/api/importar_json", methods=["POST"])
+def importar_json():
+
+    try:
+
+        data = request.get_json()
+
+        # =====================
+        # TIENDA
+        # =====================
+        tienda_doc = {
+            "nombre": data["tienda"]
+        }
+
+        tienda_id = db.tienda.insert_one(tienda_doc).inserted_id
+
+
+        # =====================
+        # SUCURSAL
+        # =====================
+        sucursal_doc = {
+            "nombre": data["sucursal"]["nombre"],
+            "direccion": data["sucursal"]["direccion"],
+            "ciudad": data["sucursal"]["ciudad"],
+            "zona": data["sucursal"]["zona"],
+            "tienda_id": tienda_id
+        }
+
+        sucursal_id = db.sucursal.insert_one(sucursal_doc).inserted_id
+
+
+        # =====================
+        # PRODUCTOS
+        # =====================
+        for prod in data["productos"]:
+
+            producto_doc = {
+                "nombre": prod["nombre"],
+                "descripcion": prod["descripcion"]
+            }
+
+            producto_id = db.producto.insert_one(producto_doc).inserted_id
+
+
+            precio_doc = {
+                "producto_id": producto_id,
+                "sucursal_id": sucursal_id,
+                "precio": prod["precio"]
+            }
+
+            db.precio.insert_one(precio_doc)
+
+
+        return jsonify({"mensaje": "JSON importado correctamente"})
+
+
+    except Exception as e:
+        return jsonify({"mensaje": str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
