@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+
+/* FONDO ANIMADO */
+
+background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1c92d2);
+background-size:400% 400%;
+animation:fondoAnimado 15s ease infinite;
+}
+
+/* ANIMACIÓN DEL FONDO */
+
+@keyframes fondoAnimado{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+/* BOTON REGRESAR */
+
+.back-btn{
+position:absolute;
+top:25px;
+left:25px;
+
+width:55px;
+height:55px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+border-radius:50%;
+
+background:rgba(255,255,255,0.15);
+border:1px solid rgba(255,255,255,0.3);
+
+color:white;
+font-size:22px;
+
+cursor:pointer;
+transition:0.3s;
+
+/* QUITA LINEA DEL LINK */
+text-decoration:none;
+}
+
+.back-btn:hover{
+background:#00c6ff;
+transform:scale(1.1);
+}
+
+/* MENSAJE ERROR */
+
+.error-box{
+position:absolute;
+top:90px;
+left:50%;
+transform:translateX(-50%);
+
+background:#ff4d4d;
+color:white;
+
+padding:12px 25px;
+border-radius:10px;
+
+font-size:14px;
+
+box-shadow:0 5px 20px rgba(0,0,0,0.4);
+display:none;
+}
+
+/* TARJETA */
+
+.login-container{
+width:100%;
+max-width:430px;
+padding:45px 40px;
+border-radius:20px;
+
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.2);
+
+box-shadow:
+0 20px 60px rgba(0,0,0,0.5),
+inset 0 1px 0 rgba(255,255,255,0.2);
+
+color:white;
+}
+
+/* TITULO */
+
+.login-container h2{
+text-align:center;
+margin-bottom:35px;
+font-weight:600;
+letter-spacing:1px;
+font-size:26px;
+}
+
+/* INPUT GROUP */
+
+.input-group{
+position:relative;
+margin-bottom:28px;
+}
+
+/* INPUT */
+
+.input-group input{
+width:100%;
+padding:16px 50px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.25);
+
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:16px;
+
+outline:none;
+transition:0.3s;
+
+white-space:nowrap;
+overflow-x:auto;
+}
+
+/* AUTOFILL */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+-webkit-text-fill-color:white !important;
+transition:background-color 9999s ease-in-out 0s;
+
+-webkit-box-shadow:0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+box-shadow:0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+
+border:1px solid rgba(255,255,255,0.25) !important;
+}
+
+/* placeholder */
+
+.input-group input::placeholder{
+color:rgba(255,255,255,0.6);
+}
+
+/* focus */
+
+.input-group input:focus{
+border-color:#00c6ff;
+box-shadow:0 0 12px rgba(0,198,255,0.6);
+background:rgba(255,255,255,0.12);
+}
+
+/* ICONOS */
+
+.input-group i{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+color:rgba(255,255,255,0.7);
+font-size:16px;
+}
+
+.icon-left{
+left:16px;
+}
+
+.toggle-password{
+right:16px;
+cursor:pointer;
+}
+
+/* BOTON */
+
+.login-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+color:white;
+font-size:17px;
+font-weight:600;
+
+cursor:pointer;
+position:relative;
+overflow:hidden;
+
+transition:0.3s;
+}
+
+/* efecto brillo */
+
+.login-btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,0.7),
+transparent
+);
+
+transition:0.6s;
+}
+
+.login-btn:hover::before{
+left:100%;
+}
+
+/* hover */
+
+.login-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* presionar */
+
+.login-btn:active{
+transform:scale(0.95);
+}
+
+/* EXTRA */
+
+.extra{
+margin-top:22px;
+text-align:center;
+font-size:15px;
+}
+
+.extra a{
+color:#00c6ff;
+text-decoration:none;
+transition:0.3s;
+}
+
+.extra a:hover{
+text-decoration:underline;
+}
+
+/* SPINNER */
+
+.spinner-container{
+display:none;
+flex-direction:column;
+align-items:center;
+gap:15px;
+color:white;
+}
+
+.spinner{
+width:60px;
+height:60px;
+
+border:6px solid rgba(255,255,255,0.2);
+border-top:6px solid #00c6ff;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+/* RESPONSIVE */
+
+@media (max-width:480px){
+
+.login-container{
+padding:35px 25px;
+}
+
+.login-container h2{
+font-size:22px;
+}
+
+.input-group input{
+font-size:15px;
+padding:14px 45px;
+}
+
+.login-btn{
+font-size:16px;
+padding:14px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<a href="{{ url_for('panel_visitante') }}" class="back-btn">
+<i class="fa fa-arrow-left"></i>
+</a>
+
+<!-- MENSAJES DESDE FLASK -->
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="error-box">
+{{ messages[0] }}
+</div>
+
+<script>
+setTimeout(()=>{
+document.querySelector(".error-box").style.display="none";
+},3000);
+</script>
+
+{% endif %}
+{% endwith %}
+
+<!-- SPINNER -->
+
+<div class="spinner-container" id="spinner">
+<div class="spinner"></div>
+<span>Verificando credenciales...</span>
+</div>
+
+<div class="login-container" id="loginBox">
+
+<h2>Iniciar Sesión</h2>
+
+<form method="POST" id="loginForm">
+
+<div class="input-group">
+<i class="fa fa-envelope icon-left"></i>
+<input type="email" name="correo" placeholder="Correo electrónico" required>
+</div>
+
+<div class="input-group">
+<i class="fa fa-lock icon-left"></i>
+<input type="password" id="password" name="password" placeholder="Contraseña" required>
+<i class="fa fa-eye toggle-password" id="togglePassword"></i>
+</div>
+
+<button class="login-btn">Ingresar</button>
+
+<div class="extra">
+<a href="{{ url_for('recuperar_password')}}">¿Olvidaste tu contraseña?</a>
+<br>
+<a href="{{ url_for('registro')}}">¿No tienes cuenta?</a>
+</div>
+
+</form>
+
+</div>
+
+<script>
+/* TOGGLE CONTRASEÑA */
+const toggle = document.getElementById("togglePassword");
+const password = document.getElementById("password");
+
+toggle.addEventListener("click", () => {
+
+const type = password.getAttribute("type") === "password" ? "text" : "password";
+password.setAttribute("type", type);
+
+toggle.classList.toggle("fa-eye");
+toggle.classList.toggle("fa-eye-slash");
+
+});
+
+/* SPINNER AL ENVIAR */
+
+const form=document.getElementById("loginForm");
+const spinner=document.getElementById("spinner");
+const login=document.getElementById("loginBox");
+
+form.addEventListener("submit",(e)=>{
+
+e.preventDefault();
+
+login.style.display="none";
+spinner.style.display="flex";
+
+setTimeout(()=>{
+form.submit();
+},3000);
+
+});
+
+/* MENSAJE ERROR DESDE BACKEND */
+
+function mostrarError(mensaje){
+
+const box=document.getElementById("errorBox");
+
+box.innerText=mensaje;
+box.style.display="block";
+
+setTimeout(()=>{
+box.style.display="none";
+},3000);
+
+}
+</script>
+
+</body>
+</html>

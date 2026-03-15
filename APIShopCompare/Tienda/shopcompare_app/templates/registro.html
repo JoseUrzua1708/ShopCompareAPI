@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+
+background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1c92d2);
+background-size:400% 400%;
+animation:fondoAnimado 15s ease infinite;
+}
+
+@keyframes fondoAnimado{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.register-container{
+width:100%;
+max-width:430px;
+padding:45px 40px;
+border-radius:20px;
+
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.2);
+
+box-shadow:
+0 20px 60px rgba(0,0,0,0.5),
+inset 0 1px 0 rgba(255,255,255,0.2);
+
+color:white;
+}
+
+.register-container h2{
+text-align:center;
+margin-bottom:35px;
+font-weight:600;
+letter-spacing:1px;
+font-size:26px;
+}
+
+.input-group{
+position:relative;
+margin-bottom:25px;
+}
+
+.input-group input{
+width:100%;
+padding:16px 50px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.25);
+
+background:rgba(255,255,255,0.08) !important;
+color:white !important;
+font-size:16px;
+
+outline:none;
+transition:0.3s;
+}
+
+/* placeholder */
+
+.input-group input::placeholder{
+color:rgba(255,255,255,0.6);
+}
+
+/* focus */
+
+.input-group input:focus{
+border-color:#00c6ff;
+box-shadow:0 0 12px rgba(0,198,255,0.6);
+background:rgba(255,255,255,0.12) !important;
+}
+
+/* AUTOFILL PARA QUE TODOS LOS CAMPOS SE VEAN IGUALES */
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+
+-webkit-text-fill-color:white !important;
+
+transition:background-color 9999s ease-in-out 0s;
+
+-webkit-box-shadow:0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+box-shadow:0 0 0 1000px rgba(255,255,255,0.08) inset !important;
+
+border:1px solid rgba(255,255,255,0.25) !important;
+
+}
+
+/* ICONOS */
+
+.input-group i{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+color:rgba(255,255,255,0.7);
+font-size:16px;
+}
+
+.icon-left{
+left:16px;
+}
+
+.toggle-password{
+right:16px;
+cursor:pointer;
+}
+
+/* BOTON */
+
+.register-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+color:white;
+font-size:17px;
+font-weight:600;
+
+cursor:pointer;
+position:relative;
+overflow:hidden;
+
+transition:0.3s;
+}
+
+/* efecto brillo */
+
+.register-btn::before{
+content:"";
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+
+background:linear-gradient(
+120deg,
+transparent,
+rgba(255,255,255,0.7),
+transparent
+);
+
+transition:0.6s;
+}
+
+.register-btn:hover::before{
+left:100%;
+}
+
+.register-btn:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.register-btn:active{
+transform:scale(0.95);
+}
+
+.extra{
+margin-top:22px;
+text-align:center;
+font-size:15px;
+}
+
+.extra a{
+color:#00c6ff;
+text-decoration:none;
+transition:0.3s;
+}
+
+.extra a:hover{
+text-decoration:underline;
+}
+
+@media (max-width:480px){
+
+.register-container{
+padding:35px 25px;
+}
+
+.register-container h2{
+font-size:22px;
+}
+
+.input-group input{
+font-size:15px;
+padding:14px 45px;
+}
+
+.register-btn{
+font-size:16px;
+padding:14px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="register-container">
+
+<h2>Crear Cuenta</h2>
+
+<form method="POST" autocomplete="off">
+
+<div class="input-group">
+<i class="fa fa-user icon-left"></i>
+<input type="text" name="nombre" placeholder="Nombre completo" required>
+</div>
+
+<div class="input-group">
+<i class="fa fa-envelope icon-left"></i>
+<input type="email" name="correo" placeholder="Correo electrónico" required>
+</div>
+
+<div class="input-group">
+<i class="fa fa-lock icon-left"></i>
+<input type="password" id="password" name="password" placeholder="Contraseña" autocomplete="new-password" required>
+<i class="fa fa-eye toggle-password" id="togglePassword"></i>
+</div>
+
+<div class="input-group">
+<i class="fa fa-lock icon-left"></i>
+<input type="password" id="confirmPassword" name="confirmar" placeholder="Confirmar contraseña" required>
+<i class="fa fa-eye toggle-password" id="togglePassword2"></i>
+</div>
+
+<button type="submit" class="register-btn">Registrarse</button>
+
+<div class="extra">
+<a href="{{ url_for('login')}}">¿Ya tienes cuenta? Inicia sesión</a>
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+function togglePassword(inputId,toggleId){
+
+const toggle=document.getElementById(toggleId);
+const password=document.getElementById(inputId);
+
+toggle.addEventListener("click",()=>{
+
+const type=password.getAttribute("type")==="password"?"text":"password";
+password.setAttribute("type",type);
+
+toggle.classList.toggle("fa-eye");
+toggle.classList.toggle("fa-eye-slash");
+
+});
+
+}
+
+togglePassword("password","togglePassword");
+togglePassword("confirmPassword","togglePassword2");
+
+</script>
+
+</body>
+</html>

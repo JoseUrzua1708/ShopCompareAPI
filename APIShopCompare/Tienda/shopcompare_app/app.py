@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify, Response
+from flask import Flask, render_template, request, redirect, flash, jsonify, Response, session
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime, date
 import requests
 import xml.etree.ElementTree as ET
 import os
+
 import random
 import certifi
 import ssl
@@ -205,10 +206,130 @@ def api_ver_productos():
     })
 
 # ====================================
+# panel visitante
+# ====================================
+@app.route("/panel-visitante")
+def panel_visitante():
+    return render_template("Panel_visitante.html")
+
+# ====================================
+# Login 
+# ====================================
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        correo = request.form.get("correo")
+        password = request.form.get("password")
+
+        # buscar usuario
+        user = db.usuario.find_one({"correo": correo})
+
+        if not user:
+            flash("El correo no está registrado ", "error")
+            return redirect("/login")
+
+        # verificar contraseña
+        if user["password"] != password:
+            flash("La contraseña es incorrecta ", "error")
+            return redirect("/login")
+
+        # buscar rol
+        rol = db.rol.find_one({"_id": user["rol_id"]})
+
+        session["user"] = {
+            "id": str(user["_id"]),
+            "correo": user["correo"],
+            "rol": rol["nombre"]
+        }
+
+        # redireccionar según rol
+        if rol["nombre"] == "admin":
+            return redirect("/")
+
+        elif rol["nombre"] == "cliente":
+            return redirect("/panel_cliente")
+
+        else:
+            return redirect("/")
+
+    return render_template("login.html")
+
+# ====================================
+# REGISTRO
+# ====================================
+
+@app.route("/registro", methods=["GET","POST"])
+def registro():
+
+    if request.method == "POST":
+
+        nombre = request.form.get("nombre")
+        correo = request.form.get("correo")
+        password = request.form.get("password")
+        confirmar = request.form.get("confirmar")
+
+        # validar campos
+        if not nombre or not correo or not password or not confirmar:
+            flash("Todos los campos son obligatorios ❌")
+            return redirect("/registro")
+
+        # validar contraseñas
+        if password != confirmar:
+            flash("Las contraseñas no coinciden ❌")
+            return redirect("/registro")
+
+        # verificar si el correo ya existe
+        usuario_existente = db.usuario.find_one({"correo": correo})
+
+        if usuario_existente:
+            flash("El correo ya existe ❌")
+            return redirect("/registro")
+
+        # obtener rol cliente
+        rol_cliente = db.rol.find_one({"nombre": "cliente"})
+
+        if not rol_cliente:
+            flash("Error: rol cliente no encontrado ⚠️")
+            return redirect("/registro")
+
+        # insertar usuario
+        nuevo_usuario = {
+            "nombre": nombre,
+            "correo": correo,
+            "password": password,
+            "rol_id": rol_cliente["_id"],
+            "fecha_creacion": datetime.now()
+        }
+
+        db.usuario.insert_one(nuevo_usuario)
+
+        flash("Registro exitoso, ahora puedes iniciar sesión ✅")
+        return redirect("/login")
+
+    return render_template("registro.html")
+# ====================================
+# RECUPERAR CONTRASEÑA
+# ====================================
+@app.route('/recuperar_password')
+def recuperar_password():
+    return render_template('recuperar_password.html')
+
+# ====================================
 # PANEL GENERAL
 # ====================================
 @app.route('/', methods=['GET', 'POST'])
 def panel():
+
+        # Si el usuario NO ha iniciado sesión, redirigir a panel visitante
+    if "user" not in session:
+        return redirect("/panel-visitante")
+    
+    if session["user"]["rol"] != "admin":
+        flash("No tienes permisos ⚠️")
+        return redirect("/")
+
     tiendas = [formatear_doc(t) for t in db.tienda.find()]
     productos = [formatear_doc(p) for p in db.producto.find()]
     sucursales = [formatear_doc(s) for s in db.sucursal.find()]

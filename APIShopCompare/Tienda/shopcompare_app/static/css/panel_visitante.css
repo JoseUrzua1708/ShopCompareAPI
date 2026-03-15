@@ -1,0 +1,89 @@
+/* --- Base y Estilos Generales --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    background: linear-gradient(135deg, #1f3a3d, #2f555b, #5f8f95);
+    background-size: 200% 200%;
+    animation: gradientMove 15s ease infinite;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Header y Logo --- */
+.main-header {
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 20px; }
+.logo-badge { 
+    width: 34px; height: 34px; border-radius: 10px; background: white; 
+    color: #1f4037; display: flex; align-items: center; justify-content: center; 
+}
+
+/* --- Botón Login --- */
+.login-btn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* --- Contenido --- */
+.content-wrapper {
+    flex: 1;
+    padding: 50px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+}
+
+h2 { margin-bottom: 40px; font-size: 36px; }
+
+.api-resumen { margin-bottom: 20px; font-size: 16px; opacity: 0.9; }
+
+/* --- Visualizador JSON --- */
+.json-viewer-container {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.json-img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .main-header { padding: 15px 25px; }
+    h2 { font-size: 28px; }
+}

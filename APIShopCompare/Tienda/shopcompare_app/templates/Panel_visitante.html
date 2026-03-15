@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopCompare | Panel Visitante</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_visitante.css') }}">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <div class="logo-badge">SC</div>
+            <span>ShopCompare</span>
+        </div>
+        <a href="{{ url_for('login') }}">
+            <button class="login-btn">Iniciar Sesión</button>
+        </a>
+    </header>
+
+    <main class="content-wrapper">
+        <h2>Explorador de Datos: ShopCompare</h2>
+
+        <section class="api-display-section">
+            <p class="api-resumen">Visualización del JSON de la API:</p>
+            <div class="json-viewer-container">
+                <img src="static/img/json.png" alt="Estructura JSON ShopCompare" class="json-img">
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
