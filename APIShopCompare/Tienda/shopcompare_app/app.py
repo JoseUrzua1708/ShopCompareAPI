@@ -11,6 +11,7 @@ from functools import wraps
 import certifi
 import secrets
 import ssl
+from itsdangerous import URLSafeTimedSerializer
 
 ################################################################################
 # El que sea encontrado manoseando el BackEnd sera MANOSEADO de la misma forma
@@ -19,6 +20,8 @@ import ssl
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = 'supersecretkey'
+# clave para generar tokens
+s = URLSafeTimedSerializer("mi_clave_secreta")
 
 # ====================================
 # apy key
@@ -342,9 +345,56 @@ def registro():
 # ====================================
 # RECUPERAR CONTRASEÑA
 # ====================================
-@app.route('/recuperar_password')
+@app.route('/recuperar_password', methods=["GET","POST"])
 def recuperar_password():
-    return render_template('recuperar_password.html')
+
+    correo = ""
+
+    if request.method == "POST":
+
+        correo = request.form.get("correo")
+
+        usuario = db.usuario.find_one({"correo": correo})
+
+        if not usuario:
+            flash("El correo no está registrado ❌","error")
+            return render_template("recuperar_password.html", correo=correo)
+
+        token = s.dumps(correo, salt="recover-password")
+
+        link = url_for("reset_password", token=token, _external=True)
+
+        flash(link, "success")
+
+        return render_template("recuperar_password.html", correo=correo)
+
+    return render_template("recuperar_password.html", correo=correo)
+
+# ====================================
+# RESTABLECER CONTRASEÑA
+# ====================================
+@app.route('/reset_password/<token>', methods=["GET","POST"])
+def reset_password(token):
+
+    try:
+        correo = s.loads(token, salt="recover-password", max_age=3600)
+    except:
+        flash("El enlace expiró o es inválido ❌","error")
+        return redirect("/login")
+
+    if request.method == "POST":
+
+        nueva_password = request.form.get("password")
+
+        db.usuario.update_one(
+            {"correo": correo},
+            {"$set": {"password": nueva_password}}
+        )
+
+        flash("Contraseña actualizada correctamente ✅","success")
+        return redirect("/login")
+
+    return render_template("reset_password.html", token=token)
 
 # ====================================
 # api key
