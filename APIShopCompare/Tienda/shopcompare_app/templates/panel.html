@@ -21,10 +21,10 @@
     </div>
 
     <!-- BOTON CERRAR SESION -->
-    <a href="{{ url_for('login') }}" class="logout-btn">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Cerrar Sesión
-    </a>
+<a href="{{ url_for('logout') }}" class="logout-btn">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    Cerrar Sesión
+</a>
 
 </header>
 
@@ -87,6 +87,8 @@
         <div class="export-controls">
             <select id="exportEndpoint">
                 <option value="/api/v1/completo">/api/v1/completo</option>
+                <option value="/api/v1/ejemplo-frijol">/api/v1/ejemplo-frijol (Solo Frijol)</option> 
+                <option value="/api/v1/catalogo">/api/v1/catalogo</option>
                 <option value="/api/v1/catalogo">/api/v1/catalogo</option>
                 <option value="/api/v1/tiendas">/api/v1/tiendas</option>
                 <option value="/api/v1/sucursales">/api/v1/sucursales</option>
@@ -113,6 +115,7 @@
 {% include "modales/precio_modal.html" %}
 {% include "modales/comparar_precios.html" %}
 {% include "modales/sync_api_modal.html" %}
+{% include "modales/cerrar_sesion.html" %}
 
 <script src="{{ url_for('static', filename='js/panel.js') }}"></script>
 

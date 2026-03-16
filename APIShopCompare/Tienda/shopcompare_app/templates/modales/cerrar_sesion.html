@@ -1,0 +1,130 @@
+<!-- Modal de Confirmación de Cierre de Sesión -->
+<style>
+/* Modal de logout aislado */
+.logout-modal {
+  display: none; /* oculto por defecto */
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  z-index: 2000;
+  backdrop-filter: blur(6px);
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.logout-modal.active {
+  display: flex;
+  animation: modalFade 0.25s ease;
+}
+
+/* Contenido del modal */
+.logout-modal .modal-content {
+  background: #3c5367; /* gris-azulado suave */
+  color: #f1f1f1;
+  padding: 25px 30px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  font-family: 'Segoe UI', sans-serif;
+  transition: all 0.3s ease;
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+.logout-modal.active .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Botones juntos y centrados */
+.logout-modal .modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.logout-modal .btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Cancelar */
+.logout-modal .cancel {
+  background: #a0a0a0;
+  color: #222;
+}
+.logout-modal .cancel:hover {
+  background: #c0c0c0;
+  transform: translateY(-2px);
+}
+
+/* Aceptar */
+.logout-modal .accept {
+  background: #e74c3c;
+  color: #fff;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+.logout-modal .accept:hover {
+  background: #ff6659;
+  transform: translateY(-2px);
+}
+
+/* Evitar scroll cuando modal activo */
+body.logout-modal-open {
+  overflow: hidden;
+}
+
+/* Animación modal fade */
+@keyframes modalFade{
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+</style>
+
+<div id="logoutModal" class="logout-modal">
+  <div class="modal-content">
+    <h3>¿Deseas cerrar sesión?</h3>
+    <p>Si cierras sesión, tendrás que volver a ingresar tus credenciales.</p>
+    <div class="modal-buttons">
+      <button id="cancelLogout" class="btn cancel">Cancelar</button>
+      <a href="{{ url_for('login') }}" class="btn accept">Aceptar</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const logoutBtn = document.querySelector(".logout-btn");
+const logoutModal = document.getElementById("logoutModal");
+const cancelBtn = document.getElementById("cancelLogout");
+
+// Abrir modal
+logoutBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  logoutModal.classList.add("active");
+  document.body.classList.add("logout-modal-open");
+});
+
+// Cancelar
+cancelBtn.addEventListener("click", () => {
+  logoutModal.classList.remove("active");
+  document.body.classList.remove("logout-modal-open");
+});
+
+// Cerrar al hacer clic fuera del modal
+window.addEventListener("click", (event) => {
+  if (event.target == logoutModal) {
+    logoutModal.classList.remove("active");
+    document.body.classList.remove("logout-modal-open");
+  }
+});
+</script>
