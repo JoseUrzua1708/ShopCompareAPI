@@ -89,17 +89,18 @@ body.logout-modal-open {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
 </style>
 
-<div id="logoutModal" class="logout-modal">
-  <div class="modal-content">
-    <h3>¿Deseas cerrar sesión?</h3>
-    <p>Si cierras sesión, tendrás que volver a ingresar tus credenciales.</p>
-    <div class="modal-buttons">
-      <button id="cancelLogout" class="btn cancel" style="width: auto; padding: 10px 20px;">Cancelar</button>
-      <a href="{{ url_for('login') }}" class="btn accept"  >Aceptar</a>
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h3>¿Deseas cerrar sesión?</h3>
+        <p class="modal-note">Si cierras sesión, tendrás que volver a ingresar tus credenciales.</p>
+        <div class="modal-buttons">
+            <button type="button" class="btn secondary-btn" onclick="closeModal('logoutModal')">Cancelar</button>
+            <button type="button" class="btn" onclick="window.location.href='{{ url_for('logout') }}'">Aceptar</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
@@ -127,4 +128,19 @@ window.addEventListener("click", (event) => {
     document.body.classList.remove("logout-modal-open");
   }
 });
+
+const acceptBtn = document.querySelector(".accept"); // Asegúrate de seleccionar el botón Aceptar
+
+acceptBtn.addEventListener("click", (e) => {
+    window.location.href = "{{ url_for('logout') }}";
+});
+
+// Agrega esto a tu archivo panel.js principal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('logout-modal-open');
+    }
+}
 </script>
