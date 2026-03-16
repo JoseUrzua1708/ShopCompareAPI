@@ -434,7 +434,7 @@ def admin_required(f):
         # Verificar si el usuario es admin
         if session["user"].get("rol") != "admin":
             flash("No tienes permisos para acceder a esta página ⚠️", "error")
-            return redirect(url_for("inicio"))
+            return redirect(url_for("panel_visitante"))
 
         return f(*args, **kwargs)
 
@@ -1016,4 +1016,4 @@ def importar_json():
 # ====================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Render asigna el puerto
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
