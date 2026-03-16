@@ -480,19 +480,20 @@ padding:15px 30px;
 }
 
 .logout-btn{
-display:flex;
-align-items:center;
-gap:8px;
-background:#e53935;
-color:white;
-padding:8px 16px;
-border-radius:8px;
-text-decoration:none;
-font-weight:500;
-transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#e53935;
+    color:white;
+    padding:8px 16px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:500;
+    transition:0.3s;
+    margin-left:auto;
 }
 
 .logout-btn:hover{
-background:#c62828;
-transform:translateY(-2px);
+    background:#c62828;
+    transform:translateY(-2px);
 }
