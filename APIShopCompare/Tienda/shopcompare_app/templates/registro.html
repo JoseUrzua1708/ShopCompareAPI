@@ -34,6 +34,47 @@ animation:fondoAnimado 15s ease infinite;
 100%{background-position:0% 50%;}
 }
 
+/* CONTENEDOR DE MENSAJES ARRIBA */
+
+.flash-container{
+position:fixed;
+top:25px;
+left:50%;
+transform:translateX(-50%);
+z-index:9999;
+width:100%;
+max-width:420px;
+}
+
+/* MENSAJES */
+
+.flash{
+background:rgba(255,0,0,0.9);
+padding:14px 18px;
+border-radius:10px;
+margin-bottom:10px;
+text-align:center;
+font-size:14px;
+color:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+animation:fadeSlide 0.4s ease;
+}
+
+.flash.success{
+background:rgba(0,200,120,0.9);
+}
+
+@keyframes fadeSlide{
+from{
+opacity:0;
+transform:translateY(-10px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
 .register-container{
 width:100%;
 max-width:430px;
@@ -78,21 +119,15 @@ outline:none;
 transition:0.3s;
 }
 
-/* placeholder */
-
 .input-group input::placeholder{
 color:rgba(255,255,255,0.6);
 }
-
-/* focus */
 
 .input-group input:focus{
 border-color:#00c6ff;
 box-shadow:0 0 12px rgba(0,198,255,0.6);
 background:rgba(255,255,255,0.12) !important;
 }
-
-/* AUTOFILL PARA QUE TODOS LOS CAMPOS SE VEAN IGUALES */
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -109,8 +144,6 @@ box-shadow:0 0 0 1000px rgba(255,255,255,0.08) inset !important;
 border:1px solid rgba(255,255,255,0.25) !important;
 
 }
-
-/* ICONOS */
 
 .input-group i{
 position:absolute;
@@ -129,8 +162,6 @@ right:16px;
 cursor:pointer;
 }
 
-/* BOTON */
-
 .register-btn{
 width:100%;
 padding:15px;
@@ -148,8 +179,6 @@ overflow:hidden;
 
 transition:0.3s;
 }
-
-/* efecto brillo */
 
 .register-btn::before{
 content:"";
@@ -225,11 +254,25 @@ padding:14px;
 
 <body>
 
+<!-- MENSAJES ARRIBA CENTRADOS -->
+
+<div class="flash-container">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="flash {{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+</div>
+
 <div class="register-container">
 
 <h2>Crear Cuenta</h2>
 
-<form method="POST" autocomplete="off">
+<form method="POST" action="{{ url_for('registro') }}" autocomplete="off">
 
 <div class="input-group">
 <i class="fa fa-user icon-left"></i>
@@ -249,7 +292,7 @@ padding:14px;
 
 <div class="input-group">
 <i class="fa fa-lock icon-left"></i>
-<input type="password" id="confirmPassword" name="confirmar" placeholder="Confirmar contraseña" required>
+<input type="password" id="confirmPassword" name="confirmar" placeholder="Confirmar contraseña" autocomplete="new-password" required>
 <i class="fa fa-eye toggle-password" id="togglePassword2"></i>
 </div>
 
@@ -284,6 +327,21 @@ toggle.classList.toggle("fa-eye-slash");
 
 togglePassword("password","togglePassword");
 togglePassword("confirmPassword","togglePassword2");
+
+/* MENSAJES AUTOMATICOS 3 SEGUNDOS */
+
+setTimeout(()=>{
+
+const flashes=document.querySelectorAll(".flash");
+
+flashes.forEach(f=>{
+f.style.transition="opacity 0.5s";
+f.style.opacity="0";
+
+setTimeout(()=>f.remove(),500);
+});
+
+},3000);
 
 </script>
 

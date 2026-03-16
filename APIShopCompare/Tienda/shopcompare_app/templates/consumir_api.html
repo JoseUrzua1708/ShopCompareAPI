@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumir API</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/consumir_api.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<header class="main-header">
+
+    <div class="logo">
+        <div class="logo-badge">SC</div>
+        <span>ShopCompare</span>
+    </div>
+
+    <!-- BOTON CERRAR SESION -->
+    <a href="{{ url_for('login') }}" class="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar Sesión
+    </a>
+
+</header>
+
+<main class="content-wrapper">
+    <h2>Explorador de Datos: ShopCompare</h2>
+
+    <section class="api-config-panel">
+        <h3>Configuración de Acceso</h3>
+
+        <div class="config-item">
+            <label>Endpoint (URL):</label>
+            <div class="data-box">#</div>
+        </div>
+
+        <div class="config-item">
+            <label>API Key:</label>
+            <div class="data-box">#</div>
+        </div>
+
+        <div class="doc-action">
+            <a href="#" class="doc-btn">
+                Ver documentación
+            </a>
+        </div>
+
+    </section>
+</main>
+
+</body>
+</html>

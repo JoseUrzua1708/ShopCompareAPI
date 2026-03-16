@@ -34,17 +34,9 @@ animation:fondoAnimado 15s ease infinite;
 
 @keyframes fondoAnimado{
 
-0%{
-background-position:0% 50%;
-}
-
-50%{
-background-position:100% 50%;
-}
-
-100%{
-background-position:0% 50%;
-}
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 
 }
 
@@ -72,8 +64,6 @@ font-size:22px;
 
 cursor:pointer;
 transition:0.3s;
-
-/* QUITA LINEA DEL LINK */
 text-decoration:none;
 }
 
@@ -82,24 +72,52 @@ background:#00c6ff;
 transform:scale(1.1);
 }
 
-/* MENSAJE ERROR */
+/* ALERTAS DEL SISTEMA */
 
-.error-box{
+.alert-box{
 position:absolute;
 top:90px;
 left:50%;
 transform:translateX(-50%);
 
-background:#ff4d4d;
-color:white;
-
 padding:12px 25px;
 border-radius:10px;
-
 font-size:14px;
 
+color:white;
 box-shadow:0 5px 20px rgba(0,0,0,0.4);
-display:none;
+
+animation:fadeIn 0.4s;
+}
+
+/* ERROR */
+
+.alert-error{
+background:#ff4d4d;
+}
+
+/* EXITO */
+
+.alert-success{
+background:#28a745;
+}
+
+/* INFO */
+
+.alert-info{
+background:#17a2b8;
+}
+
+/* ADVERTENCIA */
+
+.alert-warning{
+background:#ffc107;
+color:#000;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translate(-50%,-10px);}
+to{opacity:1;transform:translate(-50%,0);}
 }
 
 /* TARJETA */

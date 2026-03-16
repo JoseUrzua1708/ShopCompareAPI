@@ -1,0 +1,163 @@
+/* --- Base y Estilos Generales --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    background: linear-gradient(135deg, #1f3a3d, #2f555b, #5f8f95);
+    background-size: 200% 200%;
+    animation: gradientMove 15s ease infinite;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Header --- */
+.main-header {
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 20px; }
+.logo-badge { 
+    width: 34px; height: 34px; border-radius: 10px; background: white; 
+    color: #1f4037; display: flex; align-items: center; justify-content: center; 
+}
+
+/* --- Botón Login --- */
+.logout-btn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+
+
+
+/* --- Contenido --- */
+.content-wrapper {
+    flex: 1;
+    padding: 50px 20px;
+    max-width: 700px; /* Un poco más estrecho para centrar los datos */
+    margin: 0 auto;
+    width: 100%;
+}
+
+h2 { margin-bottom: 40px; text-align: center; font-size: 32px; }
+
+/* --- Panel de Configuración --- */
+.api-config-panel {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.api-config-panel h3 { 
+    margin-bottom: 30px; 
+    color: #fff; 
+    text-align: center; 
+    font-size: 22px;
+}
+
+.config-item { margin-bottom: 25px; }
+
+.config-item label { 
+    display: block; 
+    font-size: 13px; 
+    text-transform: uppercase; 
+    letter-spacing: 1.2px; 
+    margin-bottom: 10px; 
+    opacity: 0.8; 
+}
+
+.data-box {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 18px;
+    border-radius: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b2f2bb; /* Verde claro tipo terminal */
+    word-break: break-all;
+    transition: background 0.3s ease;
+}
+
+.data-box:hover {
+    background: rgba(0, 0, 0, 0.35);
+}
+
+
+/* --- Ajustes para el Botón de Documentación --- */
+.doc-action {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.doc-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    cursor: pointer;
+}
+
+.doc-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .main-header { padding: 15px 25px; }
+    .content-wrapper { padding: 30px 20px; }
+}
+.logout-btn{
+display:flex;
+align-items:center;
+gap:8px;
+background:#e53935;
+color:white;
+padding:8px 16px;
+border-radius:8px;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+margin-left:auto; /* ESTO lo manda a la derecha */
+}
+
+.logout-btn:hover{
+background:#c62828;
+transform:translateY(-2px);
+}

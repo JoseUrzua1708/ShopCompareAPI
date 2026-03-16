@@ -230,7 +230,8 @@ async function probarExportacion(){
         return;
     }
 
-    const url = `${endpoint.value}?format=${encodeURIComponent(format.value)}&page=1&per_page=10`;
+    // URL corregida sin la paginación vieja
+    const url = `${endpoint.value}?format=${encodeURIComponent(format.value)}`;
     output.textContent = "Consultando endpoint...";
     meta.textContent = "Ejecutando prueba...";
 
@@ -249,7 +250,9 @@ async function probarExportacion(){
         }
 
         output.textContent = body;
-        meta.textContent = `URL: ${url} | Status: ${response.status} | Fecha: ${new Date().toLocaleString("es-MX")}`;
+        
+        // Enlace clickeable verde agregado
+        meta.innerHTML = `URL: <a href="${url}" target="_blank" style="color: #a8d5c4; text-decoration: underline;">${url}</a> | Status: ${response.status} | Fecha: ${new Date().toLocaleString("es-MX")}`;
 
         if (!response.ok){
             mostrarFlash(`Respuesta HTTP ${response.status}`, "error");
@@ -260,6 +263,35 @@ async function probarExportacion(){
         output.textContent = "";
         meta.textContent = "Error al ejecutar prueba.";
         mostrarFlash("No se pudo consumir el endpoint de exportacion", "error");
+        console.error(error);
+    }
+}
+
+// Nueva funcion para pegar JSON
+async function pegarJsonApi() {
+    const inputTexto = prompt("Pega aquí tu código JSON estructurado del producto:");
+    
+    if (!inputTexto) return;
+
+    try {
+        const datosJson = JSON.parse(inputTexto);
+
+        const response = await fetch("/api/importar_json", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datosJson)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+            throw new Error(data.error || "Error en el servidor.");
+        }
+
+        mostrarFlash(data.mensaje, "success");
+        
+    } catch (error) {
+        mostrarFlash("Error: Asegúrate de que el JSON esté bien escrito y use comillas dobles.", "error");
         console.error(error);
     }
 }

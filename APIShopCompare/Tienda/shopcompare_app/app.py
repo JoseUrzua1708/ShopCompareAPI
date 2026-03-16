@@ -227,12 +227,12 @@ def login():
         user = db.usuario.find_one({"correo": correo})
 
         if not user:
-            flash("El correo no está registrado ", "error")
+            flash("El correo no está registrado ⚠", "error")
             return redirect("/login")
 
         # verificar contraseña
         if user["password"] != password:
-            flash("La contraseña es incorrecta ", "error")
+            flash("Correo o contraseña incorrectos ❌", "error")
             return redirect("/login")
 
         # buscar rol
@@ -250,6 +250,9 @@ def login():
 
         elif rol["nombre"] == "cliente":
             return redirect("/panel_cliente")
+        
+        elif rol["nombre"] == "usuario":
+            return redirect("/consumir_api")
 
         else:
             return redirect("/")
@@ -309,12 +312,20 @@ def registro():
         return redirect("/login")
 
     return render_template("registro.html")
+
 # ====================================
 # RECUPERAR CONTRASEÑA
 # ====================================
 @app.route('/recuperar_password')
 def recuperar_password():
     return render_template('recuperar_password.html')
+
+# ====================================
+# CONSUMIR API
+# ====================================
+@app.route('/consumir_api')
+def consumir_api():
+    return render_template('consumir_api.html')
 
 # ====================================
 # PANEL GENERAL
@@ -764,64 +775,79 @@ def sync_precios_api():
         print("Error sincronizando:", e)
         return respuesta_api({"error": "Error al sincronizar"}, root_tag="error"), 500
     
+
+
+
 @app.route("/api/importar_json", methods=["POST"])
 def importar_json():
-
     try:
-
         data = request.get_json()
+        if not data:
+            return jsonify({"error": "No se recibió JSON"}), 400
+
+        nombre_prod = data.get("producto")
+        desc_prod = data.get("descripcion", "")
+        disponibilidad = data.get("disponibilidad", [])
+
+        if not nombre_prod or not disponibilidad:
+            return jsonify({"error": "El JSON debe tener 'producto' y 'disponibilidad'"}), 400
+
+        fecha_hoy = datetime.combine(date.today(), datetime.min.time())
+        precios_guardados = 0
 
         # =====================
-        # TIENDA
+        # 1. BUSCAR O CREAR PRODUCTO
         # =====================
-        tienda_doc = {
-            "nombre": data["tienda"]
-        }
-
-        tienda_id = db.tienda.insert_one(tienda_doc).inserted_id
-
-
-        # =====================
-        # SUCURSAL
-        # =====================
-        sucursal_doc = {
-            "nombre": data["sucursal"]["nombre"],
-            "direccion": data["sucursal"]["direccion"],
-            "ciudad": data["sucursal"]["ciudad"],
-            "zona": data["sucursal"]["zona"],
-            "tienda_id": tienda_id
-        }
-
-        sucursal_id = db.sucursal.insert_one(sucursal_doc).inserted_id
-
+        prod_doc = db.producto.find_one({"nombre": nombre_prod})
+        if not prod_doc:
+            prod_id = db.producto.insert_one({"nombre": nombre_prod, "descripcion": desc_prod}).inserted_id
+        else:
+            prod_id = prod_doc["_id"]
+            # Opcional: Actualizamos la descripción por si cambió
+            db.producto.update_one({"_id": prod_id}, {"$set": {"descripcion": desc_prod}})
 
         # =====================
-        # PRODUCTOS
+        # 2. RECORRER DISPONIBILIDAD (Tiendas, Sucursales y Precios)
         # =====================
-        for prod in data["productos"]:
+        for oferta in disponibilidad:
+            t_nombre = oferta.get("tienda")
+            s_nombre = oferta.get("sucursal")
+            precio_val = float(oferta.get("precio", 0))
 
-            producto_doc = {
-                "nombre": prod["nombre"],
-                "descripcion": prod["descripcion"]
-            }
+            if not t_nombre or not s_nombre or precio_val <= 0:
+                continue
 
-            producto_id = db.producto.insert_one(producto_doc).inserted_id
+            # Upsert Tienda: Busca la tienda, si no existe la crea
+            tienda_doc = db.tienda.find_one_and_update(
+                {"nombre": t_nombre},
+                {"$setOnInsert": {"nombre": t_nombre}},
+                upsert=True, return_document=True
+            )
 
+            # Upsert Sucursal: Busca la sucursal de esa tienda, si no existe la crea
+            sucursal_doc = db.sucursal.find_one_and_update(
+                {"tienda_id": tienda_doc["_id"], "nombre": s_nombre},
+                {"$setOnInsert": {"direccion": "Pendiente", "ciudad": "General", "zona": "General"}},
+                upsert=True, return_document=True
+            )
 
-            precio_doc = {
-                "producto_id": producto_id,
-                "sucursal_id": sucursal_id,
-                "precio": prod["precio"]
-            }
+            # Upsert Precio: Guardamos el precio de HOY
+            precio_existente = db.precio.find_one({
+                "producto_id": prod_id, "sucursal_id": sucursal_doc["_id"], "fecha": fecha_hoy
+            })
+            
+            if not precio_existente:
+                db.precio.insert_one({
+                    "producto_id": prod_id, "sucursal_id": sucursal_doc["_id"], 
+                    "precio": precio_val, "fecha": fecha_hoy
+                })
+            else:
+                db.precio.update_one({"_id": precio_existente["_id"]}, {"$set": {"precio": precio_val}})
+            
+            precios_guardados += 1
 
-            db.precio.insert_one(precio_doc)
-
-
-        return jsonify({"mensaje": "JSON importado correctamente"})
-
+        return jsonify({"mensaje": f"Producto '{nombre_prod}' procesado. {precios_guardados} precios actualizados."})
 
     except Exception as e:
-        return jsonify({"mensaje": str(e)})
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        print("Error importando JSON:", e)
+        return jsonify({"error": "Sintaxis de JSON inválida o error en servidor."}), 500
