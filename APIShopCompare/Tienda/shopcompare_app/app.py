@@ -12,6 +12,11 @@ import certifi
 import secrets
 import ssl
 
+################################################################################
+# El que sea encontrado manoseando el BackEnd sera MANOSEADO de la misma forma
+# ATENTAMENTE: JOSE DESARROLLADOR BACKEND
+################################################################################
+
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = 'supersecretkey'
 
@@ -1006,10 +1011,9 @@ def importar_json():
         print("Error importando JSON:", e)
         return jsonify({"error": "Error al procesar el JSON."}), 500
 
-
-# ================
 # ====================
 # run app
-# ====================================
+# ====================
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render asigna el puerto
+    app.run(host="0.0.0.0", port=port)
